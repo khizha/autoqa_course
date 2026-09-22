@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 import pytest
 
 from urls import ITCAREERHUB
@@ -18,6 +17,7 @@ from locators import (
     consultation_text
 )
 
+import time
 
 @pytest.fixture
 def driver():
@@ -30,29 +30,26 @@ def driver():
 def test_itcareerhub(driver):
 
     # Проверяем логотип
-    assert driver.find_element(By.XPATH, logo).is_displayed()
+    assert driver.find_element(By.CSS_SELECTOR, logo).is_displayed()
 
     # Проверяем пункты меню
-    assert driver.find_element(By.XPATH, programs).is_displayed()
-    assert driver.find_element(By.XPATH, payment_methods).is_displayed()
-    assert driver.find_element(By.XPATH, about).is_displayed()
-    assert driver.find_element(By.XPATH, reviews).is_displayed()
-    assert driver.find_element(By.XPATH, blog).is_displayed()
+    assert driver.find_element(By.LINK_TEXT, programs).is_displayed()
+    assert driver.find_element(By.LINK_TEXT, payment_methods).is_displayed()
+    assert driver.find_element(By.LINK_TEXT, about).is_displayed()
+    assert driver.find_element(By.LINK_TEXT, reviews).is_displayed()
+    assert driver.find_element(By.LINK_TEXT, blog).is_displayed()
 
     # Проверяем языки
-    assert driver.find_element(By.XPATH, language_ru).is_displayed()
-    assert driver.find_element(By.XPATH, language_de).is_displayed()
+    assert driver.find_element(By.CSS_SELECTOR, language_ru).is_displayed()
+    assert driver.find_element(By.LINK_TEXT, language_de).is_displayed()
 
     # Переходим в раздел "О нас"
-    driver.find_element(By.XPATH, about).click()
+    driver.find_element(By.PARTIAL_LINK_TEXT, about).click()
 
     # Переходим в "Контакты"
-    driver.find_element(By.XPATH, contacts).click()
-
+    driver.find_element(By.PARTIAL_LINK_TEXT, contacts).click()
     # Ждём появления кнопки
-    WebDriverWait(driver, 10).until(
-        lambda d: d.find_element(By.XPATH, callback).is_displayed()
-    )
+    time.sleep(3)
 
     # Нажимаем "Обратный звонок"
     driver.find_element(By.XPATH, callback).click()
